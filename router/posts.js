@@ -70,6 +70,18 @@ res.status(401).json('you can deleted just only accunt')
     }
 })
 
+//get post 
+
+router.get('/getpost/:id',async(req,res)=>{
+    const post = await  Post.findById(req.params.id)
+    if(post.id === req.params.id){
+        res.status(200).json(post)
+    }else{
+        res.status(404).json('no found post')
+    }
+
+})
+
 // router.put("/del/:id", async (req, res) => {
 //   try {
 //     const post = await new Post.findById(req.params.id);
