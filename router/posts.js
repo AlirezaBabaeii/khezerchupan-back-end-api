@@ -2,9 +2,6 @@ const router = require("express").Router();
 const User = require("../models/users");
 const Post = require("../models/posts");
 // Create
-// router.get("/get/:id", (req, res) => {
-//   res.status(200).json(`hi postman ${req.params.id}`);
-// });
 
 router.post("/newpost", async (req, res) => {
   const newpost = new Post(req.body);
@@ -82,28 +79,27 @@ router.get('/getpost/:id',async(req,res)=>{
 
 })
 
-// router.put("/del/:id", async (req, res) => {
-//   try {
-//     const post = await new Post.findById(req.params.id);
-//     if (post.username === req.body.username) {
-//       try {
-//         const updatePost = await Post.findByIdAndUpdate(
-//           req.params.id,
-//           {
-//             $set: req.body,
-//           },
-//           { new: true }
-//         );
-//         res.status(200).json(updatePost);
-//       } catch (err) {
-//         res.status(500).json("no found username");
-//       }
-//     } else {
-//       res.status(401).json("you can only change accunt");
-//     }
-//   } catch (err) {
-//     res.status(500).json(err);
-//   }
-// });
+//GET ALL POSTS
+router.get("/getall", async (req, res) => {
+  const username = req.query.user;
+  const catName = req.query.cat;
+  try {
+    let posts;
+    if (username) {
+      posts = await Post.find({ username });
+    } else if (catName) {
+      posts = await Post.find({
+        categories: {
+          $in: [catName],
+        },
+      });
+    } else {
+      posts = await Post.find();
+    }
+    res.status(200).json(posts);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
 
 module.exports = router;
